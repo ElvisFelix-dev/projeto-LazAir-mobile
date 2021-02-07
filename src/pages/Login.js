@@ -14,7 +14,7 @@ import {
 
 import api from "../services/api";
 
-import logo from "../assets/logo.png";
+
 
 export default function Login() {
   const [name, setName] = useState("");
@@ -53,7 +53,7 @@ export default function Login() {
       style={styles.container}
     >
       <View>
-        <Image source={logo} />
+        <Image  />
       </View>
       <View style={styles.form}>
         <Text style={styles.label}>NOME *</Text>

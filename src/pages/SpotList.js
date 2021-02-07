@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -8,23 +8,53 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-} from "react-native";
+  ScrollView,
+  Alert
+} from 'react-native';
 
-import api from "../services/api";
+import ImagePicker from 'react-native-image-picker';
+
+import api from '../services/api';
 
 export default function SpotList() {
-  const [name_property, setName_property] = useState("");
-  const [address, setAdress] = useState("");
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
+  const ImagePickerSpot = useCallback(() => {
+    ImagePicker.launchImageLibrary({
+      title: 'Selecione uma foto',
+      cancelButtonTitle: 'Cancelar',
+      takePhotoButtonTitle: 'Usar Camera',
+      chooseFromLibraryButtonTitle: 'Escolher da galeria'
+
+    }, response => {
+      if (response.didCancel) {
+        return;
+      }
+      if (response.error) {
+        Alert.alert('Erro no upload da imagem');
+      }
+
+      const source = { uri: response.uri };
+
+      console.log(source)
+
+    })
+  },[])
+
+  const [name_property, setName_property] = useState('');
+  const [address, setAdress] = useState('');
+  const [price, setPrice] = useState('');
+  const [description, setDescription] = useState('');
 
   return (
-    <KeyboardAvoidingView
+    <ScrollView
       enabled={Platform.OS === 'ios'}
-      behavior="paddingBottom"
+      behavior="padding"
       style={styles.container}
     >
       <View style={styles.form}>
+        <TouchableOpacity onPress={ImagePickerSpot} style={styles.buttonImage}>
+          <Text style={styles.buttonText}>Escolha uma Imagen</Text>
+        </TouchableOpacity>
+
         <Text style={styles.label}>NOME DA ÁREA DE LAZER*</Text>
         <TextInput
           style={styles.input}
@@ -74,50 +104,49 @@ export default function SpotList() {
           <Text style={styles.buttonText}>Cadastrar</Text>
         </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+
     paddingBottom: 50,
   },
 
   form: {
-    alignSelf: "stretch",
+    alignSelf: 'stretch',
     paddingHorizontal: 30,
-    marginTop: 30,
+    marginTop: 20,
   },
 
   label: {
-    fontWeight: 'bold',
-    color: '#444',
+    fontWeight: "bold",
+    color: "#444",
     marginBottom: 8,
   },
 
   name_property: {
     fontSize: 24,
-    fontWeight: "bold",
-    color: "#000",
+    fontWeight: 'bold',
+    color: '#000',
     marginTop: 10,
   },
 
   adress: {
     fontSize: 24,
-    fontWeight: "bold",
-    color: "#000",
+    fontWeight: 'bold',
+    color: '#000',
     marginTop: 10,
   },
 
   input: {
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: "#DDD",
     paddingHorizontal: 20,
-    fontSize: 16,
-    color: '#444',
+    fontSize: 12,
+    color: "#444",
     height: 44,
     marginBottom: 28,
     borderRadius: 5,
@@ -125,22 +154,31 @@ const styles = StyleSheet.create({
 
   price: {
     fontSize: 15,
-    color: "#000",
+    color: '#000',
     marginTop: 5,
   },
 
   button: {
     height: 32,
-    backgroundColor: "#f05a5b",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#f05a5b',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 5,
     marginTop: 15,
   },
 
+  buttonImage: {
+    height: 32,
+    backgroundColor: '#f05a5b',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
+    marginBottom: 15,
+  },
+
   buttonText: {
-    color: "#000",
-    fontWeight: "bold",
+    color: '#DDD',
+    fontWeight: 'bold',
     fontSize: 15,
   },
 });
